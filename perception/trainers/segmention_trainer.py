@@ -1,6 +1,6 @@
 """
 Copyright (c) 2018. All rights reserved.
-Created by Resnick Xing on 2018/5/10
+Created by Resnick Xing on 2018/5/11
 """
 import random,numpy as np
 from keras.callbacks import TensorBoard, ModelCheckpoint, Callback
