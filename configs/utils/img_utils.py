@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 
 
-def get_test_patches(img, config):
+def get_test_patches(img, config,rl=False):
     """
     将待分割图预处理后，分割成patch
     :param img: 待分割图
@@ -19,7 +19,7 @@ def get_test_patches(img, config):
     test_img.append(img)
     test_img=np.asarray(test_img)
 
-    test_img_adjust=img_process(test_img)  #预处理
+    test_img_adjust=img_process(test_img,rl=rl)  #预处理
     test_imgs=paint_border(test_img_adjust,config)  #将图片补足到可被完美分割状态
 
     test_img_patch=extract_patches(test_imgs,config)  #依顺序分割patch
@@ -117,7 +117,7 @@ def img_process(data,rl=False):
             train_img = np.zeros([data.shape[0], 1, data.shape[2], data.shape[3]])
             train_img[:, 0, :, :] = data[:, index, :, :]
             train_img = dataset_normalized(train_img)
-            train_imgs[:, index, :, :] = train_img[:, 0, :, :]
+            train_imgs[:, index, :, :] = train_img[:, 0, :, :]/255.
 
     train_imgs=train_imgs.transpose(0, 2, 3, 1)
     return train_imgs
