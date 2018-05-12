@@ -1,12 +1,12 @@
 """
 Copyright (c) 2018. All rights reserved.
-Created by Resnick Xing on 2018/5/11
+Created by Resnick Xing on 2018/5/10
 """
-import random,numpy as np
+import random,numpy as np,cv2
 from keras.callbacks import TensorBoard, ModelCheckpoint, Callback
 
 from perception.bases.trainer_base import TrainerBase
-from configs.utils.utils import genMasks
+from configs.utils.utils import genMasks,visualize
 from configs.utils.img_utils import img_process
 
 class SegmentionTrainer(TrainerBase):
@@ -39,6 +39,7 @@ class SegmentionTrainer(TrainerBase):
 
 	def train(self):
 		gen=DataGenerator(self.data,self.config)
+		gen.visual_patch()
 		hist = self.model.fit_generator(gen.train_gen(),
 		    epochs=self.config.epochs,
 		    steps_per_epoch=self.config.subsample * self.config.total_train / self.config.batch_size,
@@ -125,7 +126,7 @@ class DataGenerator():
 		"""
 		训练样本生成器
 		"""
-		class_weight=[1.0]
+		class_weight=[1.0,1.0]
 		attnlist=[np.where(self.train_gt[:,0,:,:]==np.max(self.train_gt[:,0,:,:]))]
 		return self._genDef(self.train_img,self.train_gt,attnlist,class_weight)
 
@@ -133,6 +134,29 @@ class DataGenerator():
 		"""
 		验证样本生成器
 		"""
-		class_weight = [1.0]
+		class_weight = [2.0,1.0]
 		attnlist = [np.where(self.val_gt[:, 0, :, :] == np.max(self.val_gt[:, 0, :, :]))]
 		return self._genDef(self.val_img, self.val_gt, attnlist,class_weight)
+
+	def visual_patch(self):
+		gen=self.train_gen()
+		(X,Y)=next(gen)
+		image=[]
+		mask=[]
+		print("[INFO] Visualize Image Sample...")
+		for index in range(self.config.batch_size):
+			image.append(X[index])
+			mask.append(np.reshape(Y,[self.config.batch_size,self.config.patch_height,self.config.patch_width,self.config.seg_num+1])[index,:,:,0])
+		if self.config.batch_size%4==0:
+			row=self.config.batch_size/4
+			col=4
+		else:
+			if self.config.batch_size % 5!=0:
+				row = self.config.batch_size // 5+1
+			else:
+				row = self.config.batch_size // 5
+			col = 5
+		imagePatch=visualize(image,[row,col])
+		maskPatch=visualize(mask,[row,col])
+		cv2.imwrite(self.config.checkpoint+"image_patch.jpg",imagePatch)
+		cv2.imwrite(self.config.checkpoint + "groundtruth_patch.jpg", maskPatch)
