@@ -3,7 +3,8 @@
 Copyright (c) 2018. All rights reserved.
 Created by Resnick Xing on 2018/5/11
 """
-import os
+import os,cv2
+import matplotlib.pyplot as plt
 import shutil
 import h5py
 import numpy as np
@@ -70,6 +71,31 @@ def gray2binary(image,threshold=0.5):
     image = (image >= threshold) * 1
     return image
 
+def colorize(img,gt,prob):
+    image=np.copy(img)
+    if np.max(gt)>1:
+        gt=gt/255.
+    gtlist=[np.where(gt>=0.5)]
+    problist = [np.where(prob==1)]
+    gtx=gtlist[0][0]
+    gty=gtlist[0][1]
+    for index in range(gtx.shape[0]):           # gt区域标为绿色
+        image[gtx[index],gty[index],0]=0
+        image[gtx[index], gty[index], 1] = 1
+        image[gtx[index], gty[index], 2] = 0
+
+    probx = problist[0][0]
+    proby = problist[0][1]
+    for index in range(probx.shape[0]):
+        if image[probx[index], proby[index], 1]!=1:    # 预测错误区域标为红色
+            image[probx[index], proby[index], 0] = 1
+            image[probx[index], proby[index], 1] = 0
+            image[probx[index], proby[index], 2] = 0
+        else:# 预测正确区域标为蓝色
+            image[probx[index], proby[index], 0] = 0
+            image[probx[index], proby[index], 1] = 0
+            image[probx[index], proby[index], 2] = 1
+    return image
 
 def visualize(image,subplot):
     """
