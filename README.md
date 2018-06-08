@@ -30,9 +30,9 @@ main_trainer
 -
 starter of model training.First time you run the code,it will generate folder under `experiments folder`.This folder is where you store your `dataset` and find `log`,`model definition`
 
-main_infer
+main_test
 -
-run this file to predict on test data.
+run this file to predict on experiments/(test_name)/test/origin/ data.
 
 # Set up Environment
 make sure your PC/Server has:
