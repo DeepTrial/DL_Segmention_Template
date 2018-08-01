@@ -38,7 +38,7 @@ def paint_border(imgs,config):
     img_w = imgs.shape[2]  # width of the full image
     leftover_h = (img_h - config.patch_height) % config.stride_height  # leftover on the h dim
     leftover_w = (img_w - config.patch_width) % config.stride_width  # leftover on the w dim
-    full_imgs=None
+    full_imgs=imgs
     if (leftover_h != 0):  #change dimension of img_h
         tmp_imgs = np.zeros((imgs.shape[0],img_h+(config.stride_height-leftover_h),img_w,imgs.shape[3]))
         tmp_imgs[0:imgs.shape[0],0:img_h,0:img_w,0:imgs.shape[3]] = imgs
