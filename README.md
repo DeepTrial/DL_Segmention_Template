@@ -1,6 +1,6 @@
 # Patch Based Semantic Segmention Project Template
 
-> this segmention project template is rooted in my daily experimental code(you can find them in my repo)
+> this segmention project template is rooted in my daily experimental code (you can find them in my repo)
 
 
 # Project Struct
@@ -14,7 +14,7 @@ configs
 experiments
 -
 **data_loaders**: to generate hdf5 datasets 
-> `experiments` folder is also the palce to store datasets/experiment log/network checkpoints etc.
+> `experiments` folder is also the place to store datasets/experiment log/network checkpoints etc.
 
 perception
 -
@@ -28,11 +28,11 @@ perception
 
 main_trainer
 -
-starter of model training.First time you run the code,it will generate folder under `experiments folder`.This folder is where you store your `dataset` and find `log`,`model definition`
+starter of model training. First time you run the code, it will generate folder under `experiments` folder. This folder is where you store your `dataset` and find `log`,`model definition`
 
 main_test
 -
-run this file to predict on experiments/(test_name)/test/origin/ data.
+run this file to predict on `experiments/(test_name)/test/origin/` data.
 
 # Set up Environment
 make sure your PC/Server has:
